@@ -6,19 +6,16 @@ import pandas as pd
 import time
 
 
-def init_browser():
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    return browser = Browser('chrome', **executable_path, headless=False)
+executable_path = {'executable_path': ChromeDriverManager().install()}
+browser = Browser('chrome', **executable_path, headless=False)
 
 
 # Scrape NASA Mars News.
 def mars_news():
-    browser = init_browser()
     url = 'https://redplanetscience.com/'
-    time.sleep(2)
+    time.sleep(1)
     html = browser.html
     soup = BeautifulSoup(html, 'html.parser')
-    # results = soup.find_all('div', class_='list_text')
     news_title = soup.find('div', class_='content_title').text
     news_p = soup.find('div', class_='article_teaser_body').text
     output = [news_title, news_p]
@@ -27,7 +24,6 @@ def mars_news():
 
 # Scrape JPL Image of the Day.
 def JPL_img():
-    browser = init_browser()
     url1 = 'https://spaceimages-mars.com/'
     browser.visit(url1)
     browser.links.find_by_partial_text('FULL IMAGE').click()
@@ -52,7 +48,6 @@ def mars_facts():
 
 # Mars Hemispheres Scrape.
 def mars_hemis():
-    browser = init_browser()
     url3 = 'https://marshemispheres.com/'
     browser.visit(url3)
     html = browser.html
@@ -77,9 +72,9 @@ def mars_hemis():
 def scrape():
     mars_info = {}
     output = mars_news()
-    mars_info["mars_news"] = output[0]
+    mars_info["mars_title"] = output[0]
     mars_info["mars_p"] = output[1]
     mars_info["mars_image"] = JPL_img()
     mars_info["mars_facts"] = mars_facts()
-    mars_info["mars_hemisphere"] = mars_hemis()
+    mars_info["mars_hemis"] = mars_hemis()
     return mars_info
